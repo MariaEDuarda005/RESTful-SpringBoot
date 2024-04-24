@@ -3,6 +3,9 @@ package com.example.carros.api;
 import com.example.carros.domain.Carro;
 import com.example.carros.domain.CarroService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Iterator;
@@ -20,30 +23,63 @@ public class CarrosController {
     private CarroService service;
 
     @GetMapping()
-    public Iterable<Carro> get() {
-        return service.getCarros();
+    public ResponseEntity<Iterable<Carro>> get() {
+        //return service.getCarros();
+        return new ResponseEntity<>(service.getCarros(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public Optional<Carro> get(@PathVariable("id") Long id ) {
-        return service.getCarroById(id);
+    public ResponseEntity get(@PathVariable("id") Long id ) {
+        //return service.getCarroById(id);
+        Optional<Carro> carro = service.getCarroById(id);
+
+        return carro
+                .map(c -> ResponseEntity.ok(c))
+                .orElse(ResponseEntity.notFound().build());
+
+        // outros modos de fazer
+
+        // utilizando o if ternario
+//        return carro.isPresent() ?
+//                ResponseEntity.ok(carro.get()) :
+//                ResponseEntity.notFound().build();
+
+//        if (carro.isPresent()){
+//            Carro c = carro.get();
+//            return ResponseEntity.ok(c);
+//        } else {
+//            //.build() é um método utilizado principalmente para construir e configurar uma aplicação
+//            return ResponseEntity.notFound().build();
+//        }
     }
 
     @GetMapping("/tipo/{tipo}")
-    public Iterable<Carro> getCarrosByTipo(@PathVariable("tipo") String tipo ) {
-        return service.getCarrosByTipo(tipo);
+    public ResponseEntity getCarrosByTipo(@PathVariable("tipo") String tipo ) {
+        List<Carro> carros = service.getCarrosByTipo(tipo);
+
+        // se a lista estiver vazia retorna um noContent
+        return carros.isEmpty() ?
+                ResponseEntity.noContent().build() :
+                ResponseEntity.ok(carros);
     }
 
     @PostMapping
     public String post(@RequestBody Carro carro){
-        Carro c = service.save(carro);
+        Carro c = service.insert(carro);
         return "Carro salvo com sucesso: " + c.getId();
     }
 
-    // começar agora
-//    @PutMapping
-//    public String put(@PathVariable("id") Long id, @RequestBody Carro carro){
-//        Carro c = service.update(carro, id);
-//        return "Carro atualizado com sucesso: " + c.getId();
-//    }
+    @PutMapping("/{id}")
+    public String put(@PathVariable("id") Long id, @RequestBody Carro carro){
+        Carro c = service.update(carro, id);
+        return "Carro atualizado com sucesso: " + c.getId();
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") Long id){
+
+        service.delete(id);
+
+        return "Carro deletado com sucesso";
+    }
 }
