@@ -1,5 +1,6 @@
 package com.example.carros.domain;
 
+import com.example.carros.domain.dto.CarroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -7,6 +8,7 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CarroService {
@@ -15,18 +17,38 @@ public class CarroService {
     private CarroRepository rep;
 
     // Iterable é uma interface que representa uma coleção de elementos sobre a qual você pode percorrer
-    public Iterable<Carro> getCarros() {
-        return rep.findAll();
+    public List<CarroDTO> getCarros() {
+        List<Carro> carros = rep.findAll();
+
+        List<CarroDTO> list= carros.stream().map(c -> CarroDTO.create(c)).collect(Collectors.toList());
+
+        // mesmo coisa de outro modo diferente
+        //        List<CarroDTO> list = new ArrayList<>();
+//
+//        for (Carro c : carros){
+//            list.add(new CarroDTO(c));
+//        }
+//
+        return list;
     }
 
-    public Optional<Carro> getCarroById(Long id) {
+    public Optional<CarroDTO> getCarroById(Long id) {
         // esse metodo findbyid já existe no crudrepository então não precisa criar nada no CarroRepository
-        return rep.findById(id);
+        return rep.findById(id).map(CarroDTO::create);
+
+//        Optional<Carro> carro = rep.findById(id);
+//        if (carro.isPresent()){
+//            return Optional.of(new CarroDTO(carro.get()));
+//        } else {
+//            return null;
+//        }
     }
 
-    public List<Carro> getCarrosByTipo(String tipo) {
+    public List<CarroDTO> getCarrosByTipo(String tipo) {
         // como ele não existe temos que criar este metodo
-        return rep.findByTipo(tipo);
+        // c -> new CarroDTO(c) é a mesma coisa que CarroDTO::new
+        // c -> CarroDTO.create(c) é a mesma coisa que CarroDTO::create
+        return rep.findByTipo(tipo).stream().map(CarroDTO::create).collect(Collectors.toList());
     }
 
 
@@ -41,12 +63,12 @@ public class CarroService {
     }
 
     // Declara o metodo uptade
-    public Carro update(Carro carro, Long id) {
+    public CarroDTO update(Carro carro, Long id) {
         // verificando se o id é nulo, se o id não for nulo, significa que o registro já existe no banco e não deve ser inserido novamente
         Assert.isNull(carro.getId(), "Não foi possivel inserir o registro");
 
         // Busca o carro pelo banco de dados
-        Optional<Carro> optional = getCarroById(id);
+        Optional<Carro> optional = rep.findById(id);
         // verifica se o objeto Optional contém um objeto Carro
         if (optional.isPresent()){
             // Chama o metodo get e o armazena em uma variavel
@@ -61,31 +83,20 @@ public class CarroService {
             rep.save(db);
 
             // retorna o objeto db se a atualização for bem sucedida
-            return db;
+            return CarroDTO.create(db);
+
         } else {
+            return null;
             // o else retorna se o objeto Optional estiver vazio, ou seja, não encontrou no banco
-            throw new RuntimeException("Não foi possivel atualizar o registro");
+            // throw new RuntimeException("Não foi possivel atualizar o registro");
         }
     }
 
     public void delete(Long id) {
-        // Optional indica que o carro pode existir ou não
-        Optional<Carro> carro = getCarroById(id);
-        if (carro.isPresent()) {
+        if (getCarroById(id).isPresent()) {
             // este metodo deleteById existe na classe crud repositorio que já esta pronto
             rep.deleteById(id);
         }
-    }
-
-    public List<Carro> getCarrosFake() {
-        List<Carro> carros = new ArrayList<>();
-
-        // l é de long no java
-        carros.add(new Carro(1L,"Fusca"));
-        carros.add(new Carro(2L,"Brasilia"));
-        carros.add(new Carro(3L,"Chevette"));
-
-        return carros;
     }
 
 }

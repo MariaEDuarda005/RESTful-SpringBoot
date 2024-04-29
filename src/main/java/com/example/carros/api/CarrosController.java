@@ -2,6 +2,7 @@ package com.example.carros.api;
 
 import com.example.carros.domain.Carro;
 import com.example.carros.domain.CarroService;
+import com.example.carros.domain.dto.CarroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -23,7 +24,7 @@ public class CarrosController {
     private CarroService service;
 
     @GetMapping()
-    public ResponseEntity<Iterable<Carro>> get() {
+    public ResponseEntity<List<CarroDTO>> get() {
         //return service.getCarros();
         return new ResponseEntity<>(service.getCarros(), HttpStatus.OK);
     }
@@ -31,7 +32,7 @@ public class CarrosController {
     @GetMapping("/{id}")
     public ResponseEntity get(@PathVariable("id") Long id ) {
         //return service.getCarroById(id);
-        Optional<Carro> carro = service.getCarroById(id);
+        Optional<CarroDTO> carro = service.getCarroById(id);
 
         return carro
                 .map(c -> ResponseEntity.ok(c))
@@ -54,8 +55,8 @@ public class CarrosController {
     }
 
     @GetMapping("/tipo/{tipo}")
-    public ResponseEntity getCarrosByTipo(@PathVariable("tipo") String tipo ) {
-        List<Carro> carros = service.getCarrosByTipo(tipo);
+    public ResponseEntity<List<CarroDTO>> getCarrosByTipo(@PathVariable("tipo") String tipo ) {
+        List<CarroDTO> carros = service.getCarrosByTipo(tipo);
 
         // se a lista estiver vazia retorna um noContent
         return carros.isEmpty() ?
@@ -71,7 +72,7 @@ public class CarrosController {
 
     @PutMapping("/{id}")
     public String put(@PathVariable("id") Long id, @RequestBody Carro carro){
-        Carro c = service.update(carro, id);
+        CarroDTO c = service.update(carro, id);
         return "Carro atualizado com sucesso: " + c.getId();
     }
 
