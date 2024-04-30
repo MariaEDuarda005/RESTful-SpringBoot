@@ -51,21 +51,16 @@ public class CarroService {
         return rep.findByTipo(tipo).stream().map(CarroDTO::create).collect(Collectors.toList());
     }
 
-
-//    public Carro save(Carro carro) {
-//        return rep.save(carro);
-//    }
-
-    public Carro insert(Carro carro){
+    public CarroDTO insert(Carro carro){
         Assert.isNull(carro.getId(), "Não foi possivel inserir o registro");
 
-        return rep.save(carro);
+        return CarroDTO.create(rep.save(carro));
     }
 
     // Declara o metodo uptade
     public CarroDTO update(Carro carro, Long id) {
         // verificando se o id é nulo, se o id não for nulo, significa que o registro já existe no banco e não deve ser inserido novamente
-        Assert.isNull(carro.getId(), "Não foi possivel inserir o registro");
+        Assert.notNull(id, "Não foi possivel inserir o registro");
 
         // Busca o carro pelo banco de dados
         Optional<Carro> optional = rep.findById(id);
@@ -92,11 +87,13 @@ public class CarroService {
         }
     }
 
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         if (getCarroById(id).isPresent()) {
             // este metodo deleteById existe na classe crud repositorio que já esta pronto
             rep.deleteById(id);
+            return true;
         }
+        return false;
     }
 
 }
