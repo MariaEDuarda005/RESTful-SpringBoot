@@ -1,10 +1,7 @@
 // esse pacote é as entidades que vão ficar dentro dela
 package com.example.carros.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 //Quanto mais proximo a classe for da tabela mais facil vai ser a configuração
@@ -20,7 +17,14 @@ public class Carro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // sempre incrementando o id
     private Long id;
+
     private String nome;
     private String tipo;
+
+    private String descricao;
+    private String url_foto;
+    private String url_video;
+    private String latitude;
+    private String longitude;
 
 }
