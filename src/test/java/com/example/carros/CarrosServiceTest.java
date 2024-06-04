@@ -6,7 +6,6 @@ import com.example.carros.domain.dto.CarroDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +14,8 @@ import static junit.framework.TestCase.*;
 
 // esse arquivo já é criado por padrão
 @SpringBootTest
-class CarrosApplicationTests {
+class CarrosServiceTest {
+	// aqui nos estamos testando os metodos da classe carro service
 
 	// Como eu quero testar a classe CarroService eu vou declarar
 	@Autowired // used for automatic dependency injection. Injetar esse objeto
