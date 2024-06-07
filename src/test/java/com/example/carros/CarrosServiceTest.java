@@ -33,11 +33,9 @@ class CarrosServiceTest {
 		assertNotNull(id);
 
 		// Buscar o objeto
-		Optional<CarroDTO>op = service.getCarroById(id);
-		// como eu sei que o carro existe faz um assertTrue
-		assertTrue(op.isPresent());
+		c = service.getCarroById(id);
+		assertNotNull(c);
 
-		c = op.get();
 		// compara para ver se o objeto que vem do banco de dados possui o mesmo nome que salvou
 		assertEquals("Ferrari", c.getNome());
 		assertEquals("esportivos", c.getTipo());
@@ -47,7 +45,7 @@ class CarrosServiceTest {
 		service.delete(id);
 
 		// buscar novamente para verificar se deletou
-		assertFalse(service.getCarroById(id).isPresent()); // tem que dar false
+		assertNull(service.getCarroById(id));
 	}
 
 	@Test
@@ -70,10 +68,9 @@ class CarrosServiceTest {
 	@Test
 	public void testGet() {
 
-		Optional<CarroDTO> op = service.getCarroById(11L);
+		CarroDTO c = service.getCarroById(11L);
 
-		assertTrue(op.isPresent());
-		CarroDTO c = op.get();
+		assertNotNull(c);
 
 		assertEquals("Ferrari FF", c.getNome());
 	}

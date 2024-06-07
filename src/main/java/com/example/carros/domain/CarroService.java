@@ -1,9 +1,11 @@
 package com.example.carros.domain;
 
 import com.example.carros.domain.dto.CarroDTO;
+import com.example.carros.api.exception.ObjectNotFoundException; // da classe que foi criada
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +34,11 @@ public class CarroService {
         return list;
     }
 
-    public Optional<CarroDTO> getCarroById(Long id) {
+    public CarroDTO getCarroById(Long id) {
         // esse metodo findbyid já existe no crudrepository então não precisa criar nada no CarroRepository
-        return rep.findById(id).map(CarroDTO::create);
+        Optional<Carro> carro = rep.findById(id);
+        // ou o carro existe evai ser convertido para um carro dto, orElse não retorna um optional
+        return carro.map(CarroDTO::create).orElseThrow(() -> new ObjectNotFoundException("Carro não encontrado..."));
 
 //        Optional<Carro> carro = rep.findById(id);
 //        if (carro.isPresent()){
@@ -87,13 +91,18 @@ public class CarroService {
         }
     }
 
-    public boolean delete(Long id) {
-        if (getCarroById(id).isPresent()) {
-            // este metodo deleteById existe na classe crud repositorio que já esta pronto
-            rep.deleteById(id);
-            return true;
-        }
-        return false;
+//    public boolean delete(Long id) {
+//        if (getCarroById(id).isPresent()) {
+//            // este metodo deleteById existe na classe crud repositorio que já esta pronto
+//            rep.deleteById(id);
+//            return true;
+//        }
+//        return false;
+//    }
+
+    // nesse outro metodo deleta sempre
+    public void delete(Long id){
+        rep.deleteById(id);
     }
 
 }

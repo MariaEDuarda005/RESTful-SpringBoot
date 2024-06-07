@@ -32,11 +32,12 @@ public class CarrosController {
     @GetMapping("/{id}")
     public ResponseEntity get(@PathVariable("id") Long id ) {
         //return service.getCarroById(id);
-        Optional<CarroDTO> carro = service.getCarroById(id);
+        CarroDTO carro = service.getCarroById(id);
+        return ResponseEntity.ok(carro);
 
-        return carro
-                .map(c -> ResponseEntity.ok(c))
-                .orElse(ResponseEntity.notFound().build());
+//        return carro
+//                .map(c -> ResponseEntity.ok(c)) // ve se ele existe com a função map
+//                .orElse(ResponseEntity.notFound().build()); // caso contrario, not found
 
         // outros modos de fazer
 
@@ -66,14 +67,20 @@ public class CarrosController {
 
     @PostMapping
     public ResponseEntity post(@RequestBody Carro carro){
-        try{
-            CarroDTO c = service.insert(carro);
 
-            URI location = getUri(c.getId());
-            return ResponseEntity.created(location).build();
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().build();
-        }
+        CarroDTO c = service.insert(carro);
+
+        URI location = getUri(c.getId());
+        return ResponseEntity.created(location).build();
+
+//        try{
+//            CarroDTO c = service.insert(carro);
+//
+//            URI location = getUri(c.getId());
+//            return ResponseEntity.created(location).build();
+//        } catch (Exception ex) {
+//            return ResponseEntity.badRequest().build();
+//        }
     }
 
     private URI getUri(Long id){
@@ -95,13 +102,23 @@ public class CarrosController {
 //        }
     }
 
+
+
+    // dois modos de realizar o delete
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity delete(@PathVariable("id") Long id){
+//
+//        boolean ok = service.delete(id);
+//
+//        return ok ?
+//                ResponseEntity.ok().build() :
+//                ResponseEntity.notFound().build();
+//    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") Long id){
+        service.delete(id);
 
-        boolean ok = service.delete(id);
-
-        return ok ?
-                ResponseEntity.ok().build() :
-                ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
     }
 }
