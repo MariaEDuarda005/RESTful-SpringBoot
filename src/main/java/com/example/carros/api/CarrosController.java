@@ -17,6 +17,9 @@ import java.util.Optional;
 
 @RequestMapping("/api/v1/carros")
 public class CarrosController {
+
+    // COM A CLASSE EXCEPTION, AQUI NÃO FAZEMOS TRATAÇÃO DE METODO NENHUM
+
 //    private CarroService service = new CarroService();
 
     //marca um ponto de injeção de dependência. @Autowired, faz a ligação de um bean que é apropriado para esse ponto de injeção.
@@ -31,8 +34,9 @@ public class CarrosController {
 
     @GetMapping("/{id}")
     public ResponseEntity get(@PathVariable("id") Long id ) {
-        //return service.getCarroById(id);
+
         CarroDTO carro = service.getCarroById(id);
+
         return ResponseEntity.ok(carro);
 
 //        return carro
