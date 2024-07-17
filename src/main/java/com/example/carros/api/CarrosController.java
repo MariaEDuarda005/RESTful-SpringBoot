@@ -19,10 +19,6 @@ import java.util.Optional;
 @RequestMapping("/api/v1/carros")
 public class CarrosController {
 
-    // COM A CLASSE EXCEPTION, AQUI NÃO FAZEMOS TRATAÇÃO DE METODO NENHUM
-
-//    private CarroService service = new CarroService();
-
     //marca um ponto de injeção de dependência. @Autowired, faz a ligação de um bean que é apropriado para esse ponto de injeção.
     @Autowired
     private CarroService service;
@@ -71,7 +67,7 @@ public class CarrosController {
     }
 
     @PostMapping
-    @Secured({"ROLE_ADMIN"})
+    @Secured({"ADMIN"}) // nome do perfil da role que foi criado
     public ResponseEntity post(@RequestBody Carro carro){
 
         CarroDTO c = service.insert(carro);

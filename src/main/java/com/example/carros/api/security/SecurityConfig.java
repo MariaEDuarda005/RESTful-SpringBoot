@@ -1,5 +1,7 @@
 package com.example.carros.api.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,6 +19,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(securedEnabled = true) // habilitando a segurança por metodo
 public class SecurityConfig {
 
+    @Autowired
+    @Qualifier("userDetailsService")
+    private UserDetailsServiceImpl userDetailsService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -32,6 +38,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -41,12 +48,6 @@ public class SecurityConfig {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        // dois usuarios com perfil diferente
-
-        auth
-                .inMemoryAuthentication().passwordEncoder(encoder)
-                .withUser("user").password(encoder.encode("user")).roles("USER")
-                .and()
-                .withUser("admin").password(encoder.encode("admin")).roles("USER", "ADMIN");
+        auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
     }
 }
