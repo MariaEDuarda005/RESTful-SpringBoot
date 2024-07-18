@@ -5,14 +5,12 @@ import org.springframework.web.bind.annotation.*;
 // essa anotação transforma a classe em um web server
 @RestController
 
-// fala que esse web server vai estar mapeado na raiz da aplicação
+// mapeado na raiz da aplicação
 @RequestMapping("/")
 public class IndexController {
 
     // não tem endpoints pois herda deste @RequestMapping("/")
-    // quando chamar a pagina aparece esta mensagem
     @GetMapping()
-    // isso é a mesma coisa que o comando de cima - @RequestMapping(method = {RequestMethod.GET})
     public String get(){
         return "Api dos carros Spring Boot";
     }

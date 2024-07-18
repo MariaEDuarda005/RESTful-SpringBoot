@@ -36,13 +36,13 @@ public class CarrosAPITest {
     // "/api/v1/carros/1"
     private ResponseEntity<CarroDTO> getCarro(String url) {
         // faz o rest e passa a url e o objeto, tem um response entendy tipo carro DTO
-        return rest.getForEntity(url, CarroDTO.class);
+        return rest.withBasicAuth("admin", "123").getForEntity(url, CarroDTO.class);
     }
 
     // retorna um ResponseEntity
     private ResponseEntity<List<CarroDTO>> getCarros(String url) {
         // lista de carro, ou carros por tipo
-        return rest.withBasicAuth("user","123").exchange(
+        return rest.withBasicAuth("admin", "123").exchange(
                 url,
                 HttpMethod.GET,
                 null,
@@ -76,7 +76,7 @@ public class CarrosAPITest {
         assertEquals("esportivos", c.getTipo());
 
         // Deletar o objeto
-        rest.withBasicAuth("user","123").delete(location);
+        rest.withBasicAuth("admin", "123").delete(location);
 
         // Verificar se deletou
         assertEquals(HttpStatus.NOT_FOUND, getCarro(location).getStatusCode());

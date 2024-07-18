@@ -8,12 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/")
-public class NewController {
-
-//    @GetMapping()
-//    public String get(){
-//        return "API DOS CARROS";
-//    }
+public class UserController {
 
     @GetMapping("/userInfo")
     public UserDetails userInfo(@AuthenticationPrincipal UserDetails user){

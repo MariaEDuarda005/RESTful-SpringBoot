@@ -49,7 +49,6 @@ public class CarroService {
     }
 
     public List<CarroDTO> getCarrosByTipo(String tipo) {
-        // como ele não existe temos que criar este metodo
         // c -> new CarroDTO(c) é a mesma coisa que CarroDTO::new
         // c -> CarroDTO.create(c) é a mesma coisa que CarroDTO::create
         return rep.findByTipo(tipo).stream().map(CarroDTO::create).collect(Collectors.toList());
@@ -91,16 +90,6 @@ public class CarroService {
         }
     }
 
-//    public boolean delete(Long id) {
-//        if (getCarroById(id).isPresent()) {
-//            // este metodo deleteById existe na classe crud repositorio que já esta pronto
-//            rep.deleteById(id);
-//            return true;
-//        }
-//        return false;
-//    }
-
-    // nesse outro metodo deleta sempre
     public void delete(Long id){
         rep.deleteById(id);
     }
