@@ -49,14 +49,10 @@ public class CarrosController {
     }
 
     @PostMapping
-    @Secured({"ROLE_ADMIN"}) // nome do perfil da role que foi criado
     public ResponseEntity post(@RequestBody Carro carro){
-
         CarroDTO c = service.insert(carro);
-
         URI location = getUri(c.getId());
         return ResponseEntity.created(location).build();
-
     }
 
     private URI getUri(Long id){

@@ -1,15 +1,12 @@
 package com.example.carros.api.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,40 +15,35 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true) // habilitando a segurança por metodo
 public class SecurityConfig {
 
-    @Autowired
-    @Qualifier("userDetailsService")
-    private UserDetailsServiceImpl userDetailsService;
+    // @Bean é para o spring fazer a injeção correta
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+    // validar se está apto para realizar a requisisção
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/carros/**").permitAll()
 
-                        .anyRequest().permitAll()// Permitir todas as requisições
-                )
-                .sessionManagement(session -> session
-                        // garante que cada requisição seja tratada independentemente, sem depender de sessões HTTP.
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .httpBasic(Customizer.withDefaults());
+                        .requestMatchers(HttpMethod.POST, "/api/v1/carros").hasRole("ADMIN")
 
-        return http.build();
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/carros/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/carros/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()) // para um usuario normal que fez o login)
+                .build();
     }
-
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-        auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
