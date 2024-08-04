@@ -1,5 +1,6 @@
 package com.example.carros.api.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,10 +13,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private SecurityFilter securityFilter;
 
     // @Bean é para o spring fazer a injeção correta
 
@@ -28,12 +33,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/carros/**").permitAll()
-
                         .requestMatchers(HttpMethod.POST, "/api/v1/carros").hasRole("ADMIN")
-
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/carros/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/carros/**").hasRole("ADMIN")
                         .anyRequest().authenticated()) // para um usuario normal que fez o login)
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
