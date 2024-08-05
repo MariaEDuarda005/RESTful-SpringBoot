@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     @Autowired
-    private AuthenticationManager manager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private UserRepository repository;
@@ -38,7 +38,7 @@ public class AuthenticationController {
             // não é uma boa pratica salvar a senha do usuario como uma string , padrão é fazer um rest
             var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.senha());
             System.out.print(usernamePassword);
-            var auth = this.manager.authenticate(usernamePassword);
+            var auth = this.authenticationManager.authenticate(usernamePassword);
             // o parameto do authentication é o usuario e a senha juntos
             // pega a senha que o usuario inseriu criptografa ela e compara com a senha criptografada do banco de dados
 
