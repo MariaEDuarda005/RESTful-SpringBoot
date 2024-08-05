@@ -1,10 +1,12 @@
-package com.example.carros.domain.dto;
+package com.example.carros.api.carros.dtos;
 
-import com.example.carros.domain.Carro;
+import com.example.carros.api.carros.Carro;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL) // para ignorar atributos nulos ao gerar o json
 public class CarroDTO {
     private Long id;
     private String nome;

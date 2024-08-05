@@ -1,4 +1,4 @@
-package com.example.carros.api.security;
+package com.example.carros.api.infra.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +31,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/carros").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/carros/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/carros/**").hasRole("ADMIN")

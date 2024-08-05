@@ -1,5 +1,5 @@
 // esse pacote é as entidades que vão ficar dentro dela
-package com.example.carros.domain;
+package com.example.carros.api.carros;
 
 import jakarta.persistence.*;
 import lombok.*;

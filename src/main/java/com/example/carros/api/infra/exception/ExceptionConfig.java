@@ -1,4 +1,4 @@
-package com.example.carros.api.exception;
+package com.example.carros.api.infra.exception;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;

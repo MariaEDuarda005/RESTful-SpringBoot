@@ -1,15 +1,14 @@
 package com.example.carros;
 
-import com.example.carros.api.exception.ObjectNotFoundException;
-import com.example.carros.domain.Carro;
-import com.example.carros.domain.CarroService;
-import com.example.carros.domain.dto.CarroDTO;
+import com.example.carros.api.infra.exception.ObjectNotFoundException;
+import com.example.carros.api.carros.Carro;
+import com.example.carros.api.carros.CarroService;
+import com.example.carros.api.carros.dtos.CarroDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Optional;
 
 import static junit.framework.TestCase.*;
 

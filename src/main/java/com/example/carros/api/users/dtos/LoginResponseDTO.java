@@ -1,4 +1,4 @@
-package com.example.carros.domain.dto;
+package com.example.carros.api.users.dtos;
 
 public record LoginResponseDTO(String token) {
 }

@@ -1,6 +1,6 @@
-package com.example.carros.api.security;
+package com.example.carros.api.infra.security;
 
-import com.example.carros.domain.UserRepository;
+import com.example.carros.api.users.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

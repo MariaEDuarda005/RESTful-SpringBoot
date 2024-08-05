@@ -1,4 +1,4 @@
-package com.example.carros.domain;
+package com.example.carros.api.users;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

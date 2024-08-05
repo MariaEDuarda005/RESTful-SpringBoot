@@ -1,11 +1,9 @@
-package com.example.carros.api;
+package com.example.carros.api.users;
 
-import com.example.carros.api.security.TokenService;
-import com.example.carros.domain.User;
-import com.example.carros.domain.UserRepository;
-import com.example.carros.domain.dto.AuthenticationDTO;
-import com.example.carros.domain.dto.LoginResponseDTO;
-import com.example.carros.domain.dto.RegisterDTO;
+import com.example.carros.api.infra.security.TokenService;
+import com.example.carros.api.users.dtos.AuthenticationDTO;
+import com.example.carros.api.users.dtos.LoginResponseDTO;
+import com.example.carros.api.users.dtos.RegisterDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
